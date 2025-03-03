@@ -2,7 +2,7 @@ local entry_zones = S {247}
 local odyssey_zones = S {298,279}
 local npc_names = T{
     exit = S{'Otherworldly Vortex'},
-    port = S{'Veridical Conflux'},
+    enter = S{'Veridical Conflux'},
     warp = S{'Translocator'},
 }
 --88888888888888888888888888888888888888888888888888888888888888888888888888888-----destinations-----888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888-
@@ -250,7 +250,7 @@ if current_activity.sub_cmd ~= 'exit' then
 end
         return nil
     end,
-    help_text = "|Odyssey| - [sw] od [warp/w] [all/a/@all] (1-3) -- warp between translocators in odyssey.\n[sw] od [all/a/@all] port -- warp to the other side of Veridical Confluxes.\n[sw] od [all/a/@all] exit -- Exits Odyssey (This does give the 25% touch bonus 100% of the time.)\n-----------------------------",
+    help_text = "|Odyssey| - [sw] od [warp/w] [all/a/@all] (1-3) -- warp between translocators in odyssey.\n[sw] od [all/a/@all] enter -- warp to the other side of Veridical Confluxes.\n[sw] od [all/a/@all] exit -- Exits Odyssey (This does give the 25% touch bonus 100% of the time.)\n-----------------------------",
     sub_zone_targets = S {'1','2','3'},
     auto_select_zone = function(zone)
         if zone == 298 then
@@ -406,7 +406,7 @@ end
     end,
 
     sub_commands = {
-        port = function(current_activity, zone, p, settings, warpdata)
+        enter = function(current_activity, zone, p, settings, warpdata)
             local actions = T {}
             local packet = nil
             local menu = p["Menu ID"]
