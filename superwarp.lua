@@ -42,9 +42,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 _addon.name = 'superwarp'
 
-_addon.author = 'Akaden'
+_addon.author = 'Akaden - Modded'
 
-_addon.version = '1.0.1'
+_addon.version = '1.0.2'
 
 _addon.commands = {'sw','superwarp'}
 
@@ -60,6 +60,8 @@ require('sendall')
 require('fuzzyfind')
 
 maps = require('map/maps')
+
+__warpDistance = 10^2
 
 warp_list = T{}
 for k, map in pairs(maps) do
@@ -473,7 +475,7 @@ local function do_warp(map_name, zone, sub_zone)
             else
                 log('No ' .. map.npc_plural .. ' found!')
             end
-        elseif dist > 6^2 then
+        elseif dist > __warpDistance then
             if state.loop_count > 0 then
                 log(npc.name .. ' found, but too far! Retrying...')
                 state.loop_count = state.loop_count - 1
@@ -508,7 +510,7 @@ local function do_sub_cmd(map_name, sub_cmd, args)
         else
         	log('No '..map.npc_plural..' found!')
         end
-    elseif dist > 6^2 then
+    elseif dist > __warpDistance then
         if state.loop_count > 0 then
             log(npc.name..' found, but too far! Retrying...')
             state.loop_count = state.loop_count - 1
@@ -516,7 +518,7 @@ local function do_sub_cmd(map_name, sub_cmd, args)
         else
             log(npc.name..' found, but too far!')
         end
-    elseif npc and npc.id and npc.index and dist <= 6^2 then
+    elseif npc and npc.id and npc.index and dist <= __warpDistance then
         current_activity = {type=map_name, sub_cmd=sub_cmd, args=args, npc=npc}
         handle_before_warp()
         poke_npc(npc.id, npc.index)
@@ -535,7 +537,7 @@ local function do_find_missing_destinations(map_name, args)
         else
             log('No '..map.npc_plural..' found!')
         end
-    elseif dist > 6^2 then
+    elseif dist > __warpDistance then
         if state.loop_count > 0 then
             log(npc.name..' found, but too far! Retrying...')
             state.loop_count = state.loop_count - 1
@@ -543,7 +545,7 @@ local function do_find_missing_destinations(map_name, args)
         else
             log(npc.name..' found, but too far!')
         end
-    elseif npc and npc.id and npc.index and dist <= 6^2 then
+    elseif npc and npc.id and npc.index and dist <= __warpDistance then
         local max_results = 999999
         if #args > 0 then
             max_results = tonumber(args[1]) or 999999 

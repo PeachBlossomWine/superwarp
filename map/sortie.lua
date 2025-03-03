@@ -1,7 +1,7 @@
 local entry_zones = S{267}
 local sortie_zones = S{275, 133, 189}
 local npc_names = T{
-    port = S{'Diaphanous Bitzer', 'Diaphanous Gadget'},
+    enter = S{'Diaphanous Bitzer', 'Diaphanous Gadget'},
     warp = S{'Diaphanous Device'},
     normal = S{'Diaphanous Gadget #?'},
     hard = S{'Diaphanous Gadget #?'},
@@ -136,7 +136,7 @@ local find_bitzer_by_id = function(id)
 end
 
 return T {
-    short_name = 'so',
+    short_name = 'srt',
     long_name = 'sortie',
     move_in_zone = true,
     npc_plural = 'Diaphanous Objects',
@@ -160,7 +160,7 @@ return T {
         local bitcheckinator = p["Menu Parameters"]:unpack('b8', 5)
 		zone_tag = windower.ffxi.get_info().zone
 		local destination = nil
-        if current_activity.sub_cmd == 'port' or current_activity.sub_cmd == 'normal' or current_activity.sub_cmd == 'hard' or current_activity.sub_cmd == 'repop' then
+        if current_activity.sub_cmd == 'enter' or current_activity.sub_cmd == 'normal' or current_activity.sub_cmd == 'hard' or current_activity.sub_cmd == 'repop' then
             destination = nil
         else
             destination = current_activity.activity_settings
@@ -191,15 +191,15 @@ return T {
             -- Gadgets all warp to 'Gadget'
         elseif (menu_id >= 1005 and menu_id <= 1008) or (menu_id >= 1018 and menu_id <= 1021) then
             destination = gadget_
-        elseif menu_id == 1022 and (current_activity.sub_cmd == 'port' and bitcheckinator == 0) or (current_activity.sub_cmd == 'normal' and (bitcheckinator == 1 or bitcheckinator == 0)) or (current_activity.sub_cmd == 'hard' and bitcheckinator == 0) then
+        elseif menu_id == 1022 and (current_activity.sub_cmd == 'enter' and bitcheckinator == 0) or (current_activity.sub_cmd == 'normal' and (bitcheckinator == 1 or bitcheckinator == 0)) or (current_activity.sub_cmd == 'hard' and bitcheckinator == 0) then
             destination = aminon_
-        elseif menu_id == 1022 and (current_activity.sub_cmd == 'port' and bitcheckinator == 2) or (current_activity.sub_cmd == 'hard' and (bitcheckinator == 1 or bitcheckinator == 2)) or (current_activity.sub_cmd == 'normal' and bitcheckinator == 2) then
+        elseif menu_id == 1022 and (current_activity.sub_cmd == 'enter' and bitcheckinator == 2) or (current_activity.sub_cmd == 'hard' and (bitcheckinator == 1 or bitcheckinator == 2)) or (current_activity.sub_cmd == 'normal' and bitcheckinator == 2) then
             destination = aminon_h
         end
 		if menu_id == 1022 and bitcheckinator == 1 and (current_activity.sub_cmd ~= 'normal' and current_activity.sub_cmd ~= 'hard') then
-		    return 'Difficulty not set - Use //so normal or //so hard ; alternatively, set the Aminon difficulty before using //so port.'
+		    return 'Difficulty not set - Use //srt normal or //srt hard ; alternatively, set the Aminon difficulty before using //srt enter.'
 		end
-        if (current_activity.sub_cmd == 'normal' or current_activity.sub_cmd == 'hard') and menu_id ~= 1022 then	    
+        if (current_activity.sub_cmd == '	' or current_activity.sub_cmd == 'hard') and menu_id ~= 1022 then	    
 		    return 'Only use the normal or hard command on Aminon\'s gadget.'
 		end
         -----------Gadget Handling (Ensures the player can only warp back from whence they came --------------------------
@@ -344,7 +344,7 @@ return T {
     end
         return nil
     end,
-    help_text = "|Sortie| - [sw] so [warp/w] [all/a/@all] 0/1/2/3/4  OR  s/#a/#b/#c/#d -- warp to a designated Device in Sortie. (Use only with devices)\n[sw] so [all/a/@all] port -- warp to the other side of any bitzer or gadget. \n[sw] so [all/a/@all] normal -- set Aminon difficulty to normal and warp into his chamber. \n[sw] so [all/a/@all] hard -- set Aminon difficulty to hard and warp into his chamber. \n[sw] so repop -- Rematerialize monsters at a device or downstairs bitzer. \n-----------------------------",
+    help_text = "|Sortie| - [sw] srt [warp/w] [all/a/@all] 0/1/2/3/4  OR  s/#a/#b/#c/#d -- warp to a designated Device in Sortie. (Use only with devices)\n[sw] so [all/a/@all] enter -- warp to the other side of any bitzer or gadget. \n[sw] srt [all/a/@all] normal -- set Aminon difficulty to normal and warp into his chamber. \n[sw] so [all/a/@all] hard -- set Aminon difficulty to hard and warp into his chamber. \n[sw] srt repop -- Rematerialize monsters at a device or downstairs bitzer. \n-----------------------------",
     sub_zone_targets = S {'0', '1', '2', '3', '4', 's', '#a', '#b', '#c', '#d'}, -- Because 'a' is short for 'all' superwarp will try to interpret this as all and will always give a long pause before attempting to warp all characters to a, the best workaround is using # before a and then for balance we'll just go ahead and put it before b, c and d. we'll leave s (start) alone because s is just s; The device doesn't have a # in its name. 
     auto_select_zone = function(zone)
         if zone == 275 then
@@ -438,7 +438,7 @@ return T {
         return actions
     end,
     sub_commands = {
-        port = function(current_activity, zone, p, settings, warpdata)
+        enter = function(current_activity, zone, p, settings, warpdata)
             local actions = T {}
             local packet = nil
             local menu = p["Menu ID"]
@@ -510,7 +510,7 @@ return T {
             -----------------------------------------------------------------------------------
             if destination == bitzer_a or destination == bitzer_b or destination == bitzer_c or destination == bitzer_d then
 		        if current_time - last_port_time < 3 then
-		             notice('You must wait before using port again; preventing inadvertent basement re-entry...') 
+		             notice('You must wait before using [srt enter] again; preventing inadvertent basement re-entry...') 
                      return
                 end
 			end
@@ -619,9 +619,9 @@ return T {
         if menu == 1022 then
             if bitcheckinator == 0 then
                 destination = aminon_
-                log('Normal mode has already been set; You can use the port command for the duration of this instance.')
+                log('Normal mode has already been set; You can use the [srt enter] command for the duration of this instance.')
             elseif bitcheckinator == 2 then
-                log('Hardmode has already been set; you cannot enter normalmode for the duration of this instance and can use the port command.')
+                log('Hardmode has already been set; you cannot enter normalmode for the duration of this instance and can use the [srt enter] command.')
                 destination = aminon_h
             elseif bitcheckinator == 1 then
                 log('Setting difficulty to normal...')
@@ -721,9 +721,9 @@ return T {
         if menu == 1022 then
 		    if bitcheckinator == 0 then
                 destination = aminon_
-			    log('Normalmode has already been set; You cannot enter hardmode for the duration of this instance and can use the port command.')
+			    log('Normalmode has already been set; You cannot enter hardmode for the duration of this instance and can use the [srt enter] command.')
             elseif bitcheckinator == 2 then
-		        log('Hardmode has already been set; You can use the port command for the duration of this instance..')
+		        log('Hardmode has already been set; You can use the [srt enter] command for the duration of this instance..')
                 destination = aminon_h
             elseif bitcheckinator == 1 then
 		        log('Setting difficulty to hard...')
