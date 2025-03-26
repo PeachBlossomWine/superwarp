@@ -709,6 +709,35 @@ function receive_send_all(msg)
     end
 end
 
+function jiggleAfterWarp()
+	coroutine.sleep(0.5)
+	local player = windower.ffxi.get_mob_by_target('me')
+	if not player or not player.x or not player.y then return end
+	
+	local x = player.x
+    local y = player.y
+    local offset = 0.5 -- Adjust this for more or less jiggle
+	math.randomseed(os.time() + math.random(1, 1000000))
+	log("Jiggle start")
+    local direction = math.random(1, 4)
+
+    -- Move in a random direction
+    if direction == 1 then
+        windower.ffxi.run(x - offset, y)      -- Left jiggle
+    elseif direction == 2 then
+        windower.ffxi.run(x + offset, y)      -- Right jiggle
+    elseif direction == 3 then
+        windower.ffxi.run(x, y + offset)      -- Forward jiggle
+    elseif direction == 4 then
+        windower.ffxi.run(x, y - offset)      -- Backward jiggle
+    end
+
+    -- Stop movement after a short delay
+	coroutine.sleep(0.1)
+	windower.ffxi.run(false)
+	log("Jiggle done")
+end
+
 local function perform_next_action()
     if current_activity and current_activity.running and current_activity.action_queue and current_activity.action_index > 0 then
         local current_action = current_activity.action_queue[current_activity.action_index]
@@ -722,12 +751,15 @@ local function perform_next_action()
             	state.client_lock = false
                 -- not zoning. Just run the command now + delay
                 handle_on_arrival:schedule(math.max(0, settings.command_delay_on_arrival))
+				jiggleAfterWarp()
             end
 
             last_activity = current_activity
             state.loop_count = 0
             current_activity = nil
             last_action = nil
+			--Call movement jiggle here.
+			
         elseif not state.fast_retry and current_action.wait_packet then
             debug("waiting for packet 0x"..current_action.wait_packet:hex().." for action "..tostring(current_activity.action_index)..' '..(current_action.description or ''))
             current_action.wait_start = os.time()
