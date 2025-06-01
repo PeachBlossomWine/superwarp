@@ -107,7 +107,21 @@ local function table_contains(t, value)
     return false
 end
 
+-- local function has_temp_item(item_id)
+    -- local temp_items = windower.ffxi.get_items(3)
+    -- for _, item in ipairs(temp_items) do
+        -- if item.id == item_id then
+            -- return true
+        -- end
+    -- end
+    -- return false
+-- end
+
 local function has_temp_item(item_id)
+    if settings.ignore_temp_item_check then
+        return true
+    end
+
     local temp_items = windower.ffxi.get_items(3)
     for _, item in ipairs(temp_items) do
         if item.id == item_id then
@@ -116,6 +130,7 @@ local function has_temp_item(item_id)
     end
     return false
 end
+
 
 -------------------------------------------------------------------
 local find_gadget_by_id = function(id)

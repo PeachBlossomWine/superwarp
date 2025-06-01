@@ -98,6 +98,7 @@ local defaults = {
     simulate_client_lock = false,           -- lock the local client during a warp/subcommand, simulating menu behavior.
     send_all_order_mode = 'melast',         -- order modes: melast, mefirst, alphabetical
     chat_log_use = 'log',                   -- log messages to 'log', 'console', or 'none'. If debug is on, it will always log to the chat log
+	ignore_temp_item_check = true,			-- ignore checking temp items for sortie
 }
 
 local settings = config.load(defaults)
