@@ -107,18 +107,9 @@ local function table_contains(t, value)
     return false
 end
 
--- local function has_temp_item(item_id)
-    -- local temp_items = windower.ffxi.get_items(3)
-    -- for _, item in ipairs(temp_items) do
-        -- if item.id == item_id then
-            -- return true
-        -- end
-    -- end
-    -- return false
--- end
-
-local function has_temp_item(item_id)
-    if settings.ignore_temp_item_check then
+local function has_temp_item(item_id, settings)
+    if settings and settings.ignore_temp_item_check then
+		log('Ignore TEMP ITEM Check')
         return true
     end
 
@@ -170,7 +161,7 @@ return T {
         end)
         return mlist
     end,
-    validate = function(menu_id, zone, current_activity,p)
+    validate = function(menu_id, zone, current_activity,p, settings)
 		local origination = p["Menu Parameters"]:unpack('b8', 1)
         local bitcheckinator = p["Menu Parameters"]:unpack('b8', 5)
 		zone_tag = windower.ffxi.get_info().zone
@@ -286,74 +277,74 @@ return T {
 
         -- Bitzers --
         if (menu_id >= 1010 and menu_id <= 1017) then
-            if menu_id == 1010 and not has_temp_item(temp_item_ids.Sheet.A) then
+            if menu_id == 1010 and not has_temp_item(temp_item_ids.Sheet.A, settings) then
                 return 'You do not have the Ra\'Kaznar Sheet #A'
             end
-            if menu_id == 1011 and not has_temp_item(temp_item_ids.Sheet.B) then
+            if menu_id == 1011 and not has_temp_item(temp_item_ids.Sheet.B, settings) then
                 return 'You do not have the Ra\'Kaznar Sheet #B'
             end
-            if menu_id == 1012 and not has_temp_item(temp_item_ids.Sheet.C) then
+            if menu_id == 1012 and not has_temp_item(temp_item_ids.Sheet.C, settings) then
                 return 'You do not have the Ra\'Kaznar Sheet #C'
             end
-            if menu_id == 1013 and not has_temp_item(temp_item_ids.Sheet.D) then
+            if menu_id == 1013 and not has_temp_item(temp_item_ids.Sheet.D, settings) then
                 return 'You do not have the Ra\'Kaznar Sheet #D'
             end
 
         -- Gadgets --
         elseif (menu_id >= 1005 and menu_id <= 1008) or (menu_id >= 1018 and menu_id <= 1021) then
-            if menu_id == 1005 and not has_temp_item(temp_item_ids.Shard.A) then
+            if menu_id == 1005 and not has_temp_item(temp_item_ids.Shard.A, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #A'
             end
-            if menu_id == 1006 and not has_temp_item(temp_item_ids.Shard.B) then
+            if menu_id == 1006 and not has_temp_item(temp_item_ids.Shard.B, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #B'
             end
-            if menu_id == 1007 and not has_temp_item(temp_item_ids.Shard.C) then
+            if menu_id == 1007 and not has_temp_item(temp_item_ids.Shard.C, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #C'
             end
-            if menu_id == 1008 and not has_temp_item(temp_item_ids.Shard.D) then
+            if menu_id == 1008 and not has_temp_item(temp_item_ids.Shard.D, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #D'
             end
-            if menu_id == 1018 and not has_temp_item(temp_item_ids.Shard.E) then
+            if menu_id == 1018 and not has_temp_item(temp_item_ids.Shard.E, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #E'
             end
-            if menu_id == 1019 and not has_temp_item(temp_item_ids.Shard.F) then
+            if menu_id == 1019 and not has_temp_item(temp_item_ids.Shard.F, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #F'
             end
-            if menu_id == 1020 and not has_temp_item(temp_item_ids.Shard.G) then
+            if menu_id == 1020 and not has_temp_item(temp_item_ids.Shard.G, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #G'
             end
-            if menu_id == 1021 and not has_temp_item(temp_item_ids.Shard.H) then
+            if menu_id == 1021 and not has_temp_item(temp_item_ids.Shard.H, settings) then
                 return 'You do not have the Ra\'Kaznar Shard #H'
             end
 
         -- Devices--
         elseif (menu_id >= 1000 and menu_id <= 1004) then
             if menu_id == 1000 and
-                (not has_temp_item(temp_item_ids.Plate.A) and not has_temp_item(temp_item_ids.Plate.B) and
-                    not has_temp_item(temp_item_ids.Plate.C) and not has_temp_item(temp_item_ids.Plate.D)) then
+                (not has_temp_item(temp_item_ids.Plate.A, settings) and not has_temp_item(temp_item_ids.Plate.B, settings) and
+                    not has_temp_item(temp_item_ids.Plate.C, settings) and not has_temp_item(temp_item_ids.Plate.D, settings)) then
                 return 'You do not have any of the Ra\'Kaznar Plates'
             end
             if (menu_id >= 1000 and menu_id <= 1004) and destination.menu_id == 1001 and
-                not has_temp_item(temp_item_ids.Plate.A) then
+                not has_temp_item(temp_item_ids.Plate.A, settings) then
                 return 'You do not have the Ra\'Kaznar Plate #A'
             end
             if (menu_id >= 1000 and menu_id <= 1004) and destination.menu_id == 1002 and
-                not has_temp_item(temp_item_ids.Plate.B) then
+                not has_temp_item(temp_item_ids.Plate.B, settings) then
                 return 'You do not have the Ra\'Kaznar Plate #B'
             end
             if (menu_id >= 1000 and menu_id <= 1004) and destination.menu_id == 1003 and
-                not has_temp_item(temp_item_ids.Plate.C) then
+                not has_temp_item(temp_item_ids.Plate.C, settings) then
                 return 'You do not have the Ra\'Kaznar Plate #C'
             end
             if (menu_id >= 1000 and menu_id <= 1004) and destination.menu_id == 1004 and
-                not has_temp_item(temp_item_ids.Plate.D) then
+                not has_temp_item(temp_item_ids.Plate.D, settings) then
                 return 'You do not have the Ra\'Kaznar Plate #D'
             end
         end
         -- Fragments--
         if menu_id == 1022 and
-            (not has_temp_item(temp_item_ids.Fragment.A) or not has_temp_item(temp_item_ids.Fragment.B) or
-                not has_temp_item(temp_item_ids.Fragment.C) or not has_temp_item(temp_item_ids.Fragment.D)) then
+            (not has_temp_item(temp_item_ids.Fragment.A, settings) or not has_temp_item(temp_item_ids.Fragment.B, settings) or
+                not has_temp_item(temp_item_ids.Fragment.C, settings) or not has_temp_item(temp_item_ids.Fragment.D, settings)) then
             return 'You do not have all 4 Ra\'Kaznar Fragments'
         end
     end
