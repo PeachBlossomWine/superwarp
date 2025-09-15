@@ -11,6 +11,8 @@ local maps =  {
     ['spd'] = require('map/spd'),
 	['sortie'] = require('map/sortie'),
 	['odyssey'] = require('map/odyssey'),
+	['temenos'] = require('map/temenos'),
+	['apollyon'] = require('map/apollyon'),
 	['gaol'] = require('map/gaol'),
 }
 
